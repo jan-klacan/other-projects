@@ -1,6 +1,8 @@
 import random
 
 
+# Character class
+
 class Character():
     baseline_health = 2
     baseline_luck = 0.2
@@ -105,3 +107,102 @@ class Character():
         elif new_luck > self.__luck_total:
             new_luck = self.__luck_total
         self.__current_luck = new_luck
+
+
+# Game character classes (subclasses of Character)
+
+class Gladiator(Character):
+    def __init__(self):
+        super().__init__("Gladiator", 3, 0.5)
+    
+    def special_ability(self, target: Character):
+        print("CHARGE!")
+        roll = random.random()
+
+        if roll <= self.current_luck:
+            print(f"Gladiator's charge on {target.name} is successful. Opponent loses 1 health.")
+            target.change_health(-1)
+        else:
+            print(f"Gladiator misses. He gets angrier and more impulsive - his luck decreases by 0.15.")
+            self.change_luck(-0.15)
+
+
+class Knight(Character):
+    def __init__(self):
+        super().__init__("Knight", 2, 0.4)
+    
+    def special_ability(self, target: Character):
+        print("I fight for honor!")
+        roll = random.random()
+
+        if roll <= self.current_luck:
+            print(f"Knight's attack is successful. Opponent loses 1 health.")
+            target.change_health(-1)
+        else:
+            print("The opponent defended knight's attack, but got scared by it. Opponent's luck decreases by 0.1.")
+            target.change_luck(-0.1)
+
+
+class Witch(Character):
+    def __init__(self):
+        super().__init__("Witch", 1, 0.55)
+    
+    def special_ability(self, target: Character):
+        print("Your luck is running out. Wait... which spell was it?")
+        roll = random.random()
+
+        if roll <= self.current_luck:
+            print(f"The Witch remembered the correct spell and hexed the opponent. {target.name}'s luck decreases by 0.25.")
+            target.change_luck(-0.25)
+        else:
+            print("The Witch cast a wrong spell and hexed herself! Her luck decreases by 0.25.")
+            self.change_luck(-0.25)
+
+
+class Warlock(Character):
+    def __init__(self):
+        super().__init__("Warlock", 1, 0.55)
+
+    def special_ability(self, target: Character):
+        print("The darkness is on my side, but not on yours...")
+        roll = random.random()
+
+        if roll <= self.current_luck:
+            print(f"Warlock steals {target.name}'s health.")
+            target.change_health(-1)
+            self.change_health(1)
+        else:
+            print(f"The darkness overpowers Warlock's abilities - his health decreases by 1 and his luck decreases by 0.15.")
+            self.change_health(-1)
+            self.change_luck(-0.15)
+
+
+class Priest(Character):
+    def __init__(self):
+        super().__init__("Priest", 3, 0.4)
+
+    def special_ability(self, target: Character):
+        print("The light will heal me!")
+        roll = random.random()
+
+        if roll <= self.current_luck:
+            print(f"Priest's powers are successful and heal him by 1 life.")
+            self.change_health(1)
+        else:
+            print(f"The light didn't answer Priest's call. Nothing happens.")
+
+
+class Jester(Character):
+    def __init__(self):
+        super().__init__("Jester", 2, 0.6)
+
+    def special_ability(self, target: Character):
+        print("We all love jokes, don't we?")
+        roll = random.random()
+
+        if roll <= self.current_luck:
+            print(f"Jester uses his magic to decrease opponent's luck by the amount of their health/10.")
+            target.change_luck(-target.current_health/10)
+        else:
+            print(f"Jester's magic backfires and his luck decreases by 0.3.")
+            self.change_luck(-0.3)
